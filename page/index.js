@@ -6,6 +6,7 @@ let detailMixin = require('./detail').mixin;
 //Function to help page creation.
 module.exports = {
   detail: detailMixin,
+  list: require('./list'),
   search: require('./search'),
   mixin: require('./mixin'),
   /**
