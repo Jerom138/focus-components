@@ -1,14 +1,15 @@
 let type = require('focus').component.types;
 let builder = require('focus').component.builder;
 let React = require('react');
+let assign = require('object-assign');
 let Table = require('../../../list/table').list.component;
 let isFunction = require('lodash/lang/isFunction');
 
-let ScrollInfoMixin = require('../../search/common/scroll-info-mixin').mixin;
+let ScrollBehaviourMixin = require('../mixin/scroll-behaviour-mixin');
 let StoreMixin = require('../../../common/mixin/store-behaviour');
 
 let tablePageMixin = {
-  mixins: [ScrollInfoMixin, StoreMixin],
+  mixins: [ScrollBehaviourMixin, StoreMixin],
 
   /**@inheritDoc**/
   componentDidMount(){
@@ -42,7 +43,7 @@ let tablePageMixin = {
 
   _buildListCriteria() {
     return {
-      criteria: this.props.criteria,
+      criteria: this._getCriteria(),
       pageInfos: {
         page: this.state.currentPage
         //order: this.state.orderSelected
@@ -50,11 +51,27 @@ let tablePageMixin = {
     };
   },
 
+  _getCriteria(){
+    if(this.getCriteria){
+      return this._getCriteria();
+    }
+    if(this.refs.criteria) {
+      return this.refs.criteria.getValue();
+    }
+  },
+
+  /**
+   * Handler when store emit a change event.
+   */
+  onChange() {
+    this.setState(assign(this.this._getStateFromStores(), this.getScrollState()));
+  },
+
   search(){
     if(!isFunction(this.props.loadListAction)){
       console.warn(`Your page seems to miss a search action, add in your props a {loadListAction: function(criteria}`, this.props.searchAction);
     }
-    this.props.loadListAction(_buildListCriteria());
+    this.props.loadListAction(this._buildListCriteria());
   },
 
   /**
@@ -73,16 +90,16 @@ let tablePageMixin = {
         isManualFetch={this.state.isManualFetch}
         />
     );
-  },
+  }
 
   /**@inheritDoc**/
-  render(){
+  /*render(){
     return (
       <div className="table-panel" data-focus="table-panel">
         {this.getTableComponent()}
       </div>
     );
-  }
+  }*/
 };
 
-module.exports = builder(tablePageMixin);
+module.exports = builder(tablePageMixin, true);

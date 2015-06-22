@@ -44,7 +44,7 @@ var changeBehaviourMixin = {
     _onChange: function onFormStoreChangeHandler(changeInfos) {
         var onChange =  this.props.onChange || this.onChange;
         if (onChange) {
-            onChange.call(this,changeInfos);
+           return onChange.call(this,changeInfos);
         }
         this.setState(this._getStateFromStores(), this._afterChange(changeInfos));
     },

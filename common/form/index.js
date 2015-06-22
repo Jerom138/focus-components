@@ -8,7 +8,6 @@ var definitionMixin = require('../mixin/definition');
 //var fieldComponentBehaviour = require('../mixin/field-component-behaviour');
 var builtInComponents = require('../mixin/built-in-components');
 var storeBehaviour = require('../mixin/store-behaviour');
-var storeChangeBehaviour = require('./store-change-behaviour');
 
 //Form mixins.
 var referenceBehaviour = require('./mixin/reference-behaviour');
@@ -19,7 +18,7 @@ var actionBehaviour = require('./mixin/action-behaviour');
  * @type {Object}
  */
 var formMixin = {
-  mixins: [definitionMixin, referenceBehaviour, storeBehaviour, storeChangeBehaviour, actionBehaviour, builtInComponents],
+  mixins: [definitionMixin, referenceBehaviour, storeBehaviour, actionBehaviour, builtInComponents],
   /** @inheritdoc */
   getDefaultProps: function getFormDefaultProps() {
     return {

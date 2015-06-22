@@ -88,7 +88,7 @@
         }
     });
 
-    var store =  new Focus.store.ListStore({
+    var listStore =  new Focus.store.ListStore({
         definition: {'test': 'test', 'commune': 'commune'}
     });
 
@@ -97,11 +97,24 @@
             alert('click sur la ligne ' + line.id);
         },
         lineComponent: Line,
-        loadListAction: action.load,
-        store: store
+        loadListAction: action.load
     };
 
-    var TableComponent = FocusComponents.page.list.table.component;
+    var TableComponent = React.createClass({
+        mixins: [FocusComponents.page.list.table.mixin],
+        stores: [{
+            store: listStore,
+            properties: ["test"]
+        }],
+
+        render: function render(){
+            return (
+                <div className="table-panel" data-focus="table-panel">
+                    {this.getTableComponent()}
+                </div>
+            )
+        }
+    });
 
     React.render(React.createElement(TableComponent, tableProps), document.querySelector("#list-container"));
 </script>
