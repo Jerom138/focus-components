@@ -24,7 +24,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/0.4.0/Showdown.js"></script>
 
   <!-- Include Date Range Picker -->
-  <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/2.9.0/moment.min.js"></script>
+  <script type="text/javascript" src="http://momentjs.com/downloads/moment-with-locales.js"></script>
   <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker.js"></script>
   <link rel="stylesheet" type="text/css"
         href="//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker-bs3.css"/>
@@ -45,13 +45,43 @@
   <div id="form-container"></div>
   <script type="text/jsx">
   $(function(){
-    Focus.components = FocusComponents;
-    var DateInput = Focus.components.common.input.date.component;
-    React.render(
-        <form>
-            <DateInput  name='fieldDate1' formatter={function(d){return moment(d).format('L')}} value={new Date()} style={{className: 'papaDate'}} onChange={function(evt){console.log('date changed', evt)}}/>
-        </form>
-    , document.querySelector("#form-container"));
+    var DateInput = FocusComponents.common.input.date.component;
+    var LOCALE = 'fr';
+    moment.locale(LOCALE);
+    var formatter = function(d){
+        return moment(d).locale(LOCALE).format('L')
+    };
+    var unformatter =function(d){
+        return moment(d, 'DD/MM/YYYY').locale(LOCALE).toISOString()
+    };
+    var dateRangePickerOptions = {
+        dateRangePicker: {
+            locale: {
+            //format: moment.localeData().longDateFormat('L')
+            },
+            minDate: "01/01/1900",
+            maxDate: moment().format('L')
+        }
+    };
+    var FormWithDates = React.createClass({
+      _handleClick: function() {
+        // Explicitly focus the text input using the raw DOM API.
+        console.info('VALUE',this.refs.date.getValue())
+      },
+      render: function() {
+        // The ref attribute adds a reference to the component to
+        // this.refs when the component is mounted.
+        return (
+          <div>
+              <DateInput  ref='date' name='fieldDate1' formatter={formatter} unformatter={unformatter} value={new Date().toISOString()} options={dateRangePickerOptions}/>
+              <DateInput  ref='date2' name='fieldDate1' formatter={formatter} unformatter={unformatter} value={moment('07/11/1987', 'DD/MM/YYYY').locale(LOCALE).toISOString()} options={dateRangePickerOptions}/>
+              <button onClick={this._handleClick}>Get value</button>
+          </div>
+        );
+      }
+    });
+
+    React.render(<FormWithDates />, document.querySelector("#form-container"));
   });
   </script>
 

@@ -1,7 +1,6 @@
 // Dependencies
 
-let builder = Focus.component.builder;
-let types = Focus.component.types;
+let {builder, types} = require('focus').component;
 let find = require('lodash/collection/find');
 
 // Components

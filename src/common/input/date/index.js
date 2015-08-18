@@ -4,13 +4,21 @@ let builder = require('focus').component.builder;
 let React = require('react');
 let inputTextMixin = require('../text').mixin;
 let assign = require('object-assign');
+let inputMixin = assign(inputTextMixin, {
+    getValue(){
+        let val = jQuery(React.findDOMNode(this)).val();
+        let formatedValue = this.props.unformatter(val);
+        console.log('GETVALUE DATE', val, 'FORMATED VALUE',formatedValue);
+        return formatedValue;
+    }
+});
 /**
  * Input text mixin.
  * @type {Object}
  */
 let inputDateMixin = {
     /** @inheritdoc */
-    mixins: [inputTextMixin],
+    mixins: [inputMixin],
     /** @inheritdoc */
     componentDidMount(){
         let jQuery = require('jquery');
@@ -31,7 +39,9 @@ let inputDateMixin = {
           singleDatePicker: true,
           showDropdowns: true
         });
+        //jQuery(React.findDOMNode(this)).daterangepicker(dateRangeOptions);
         jQuery(React.findDOMNode(this)).daterangepicker(dateRangeOptions, (start)=>{ ///*, end, label*/
+            console.log('CB DATE PICKER', start);
             component.setState({value: component.props.formatter(start.toDate())});
         });
     }
